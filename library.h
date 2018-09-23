@@ -3,15 +3,15 @@
 
 #include "m_pd.h"
 
-static t_class *compressor_class;
+static t_class *compressor_tilde_class;
 
-typedef struct _compressor {
+typedef struct _compressor_tilde {
     t_object x_obj;
-} t_compressor;
+} t_compressor_tilde;
 
-void *compressor_new(void);
-void compressor_bang(t_compressor *x);
+void *compressor_tilde_new(void);
+void compressor_tilde_bang(t_compressor_tilde *x);
 
-void compressor_setup(void);
+void compressor_tilde_setup(void);
 
 #endif
