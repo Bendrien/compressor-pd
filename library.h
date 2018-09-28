@@ -16,19 +16,25 @@ typedef struct _compressor_tilde {
     t_inlet *in6;
     t_outlet *out;
 
-    float threashold;
-    float ratio;
+    float threshold;
+    float slope;
     float attack;
+    float attack_gain;
     float release;
-    float gain;
+    float release_gain;
+    float post_gain;
+
+    float sample_rate;
+    float envelope;
 } t_compressor_tilde;
 
 t_int *compressor_tilde_perform(t_int *w);
-void compressor_tilde_set_in2(t_compressor_tilde *x, t_floatarg in2);
-void compressor_tilde_set_in3(t_compressor_tilde *x, t_floatarg in3);
-void compressor_tilde_set_in4(t_compressor_tilde *x, t_floatarg in4);
-void compressor_tilde_set_in5(t_compressor_tilde *x, t_floatarg in5);
-void compressor_tilde_set_in6(t_compressor_tilde *x, t_floatarg in6);
+
+void compressor_tilde_set_threshold(t_compressor_tilde *x, t_floatarg threshold);
+void compressor_tilde_set_ratio(t_compressor_tilde *x, t_floatarg ratio);
+void compressor_tilde_set_attack(t_compressor_tilde *x, t_floatarg attack);
+void compressor_tilde_set_release(t_compressor_tilde *x, t_floatarg release);
+void compressor_tilde_set_post_gain(t_compressor_tilde *x, t_floatarg post_gain);
 
 void compressor_tilde_dsp(t_compressor_tilde *x, t_signal **sp);
 void *compressor_tilde_new(void);
