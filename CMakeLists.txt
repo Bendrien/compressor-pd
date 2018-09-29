@@ -10,4 +10,10 @@ add_library(compressor SHARED
     )
 
 set_target_properties(compressor PROPERTIES PREFIX "")
-set_target_properties(compressor PROPERTIES SUFFIX "~.pd_linux")
+if (APPLE)
+    set_target_properties(compressor PROPERTIES SUFFIX "~.pd_darwin")
+elseif(UNIX)
+    set_target_properties(compressor PROPERTIES SUFFIX "~.pd_linux")
+elseif(WIN32)
+    set_target_properties(compressor PROPERTIES SUFFIX "~.dll")
+endif (APPLE)
