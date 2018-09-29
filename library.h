@@ -14,7 +14,10 @@ typedef struct _compressor_tilde {
     t_inlet *in4;
     t_inlet *in5;
     t_inlet *in6;
+
     t_outlet *out;
+    t_outlet *out2;
+    t_outlet *out3;
 
     float threshold;
     float slope;
@@ -24,8 +27,10 @@ typedef struct _compressor_tilde {
     float release_gain;
     float post_gain;
 
-    float sample_rate;
     float envelope;
+    float comp_gain;
+
+    float sample_rate;
 } t_compressor_tilde;
 
 t_int *compressor_tilde_perform(t_int *w);

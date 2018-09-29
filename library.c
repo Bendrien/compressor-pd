@@ -6,7 +6,9 @@ t_int *compressor_tilde_perform(t_int *w)
     t_compressor_tilde *self = (t_compressor_tilde *)(w[1]);
     t_sample          *inBuf =           (t_sample *)(w[2]);
     t_sample         *outBuf =           (t_sample *)(w[3]);
-    int                    n =                  (int)(w[4]);
+    t_sample     *compOutBuf =           (t_sample *)(w[4]);
+    t_sample      *envOutBuf =           (t_sample *)(w[5]);
+    int                    n =                  (int)(w[6]);
 
     while (n--)
     {
@@ -18,19 +20,21 @@ t_int *compressor_tilde_perform(t_int *w)
                                self->attack_gain :
                                self->release_gain;
         self->envelope = env_in + env_gain * (self->envelope - env_in);
+        *envOutBuf++ = self->envelope;
 
         // compute compressor gain
         const float env_dB = 20.f * log10f(self->envelope);
         const float comp_dB = env_dB >= self->threshold ?
                               self->slope * (self->threshold - env_dB) :
                               0.f;
-        const float comp_gain = powf(10.f, comp_dB * 0.05f);
+        self->comp_gain = powf(10.f, comp_dB * 0.05f);
+        *compOutBuf++ = self->comp_gain;
 
         // apply gains
-        *outBuf++ = in * self->post_gain * comp_gain;
+        *outBuf++ = in * self->post_gain * self->comp_gain;
     }
 
-    return (w+5);
+    return (w+7);
 }
 
 /*
@@ -77,8 +81,8 @@ void compressor_tilde_set_post_gain(t_compressor_tilde *x, t_floatarg post_gain)
 
 void compressor_tilde_dsp(t_compressor_tilde *x, t_signal **sp)
 {
-    dsp_add(compressor_tilde_perform, 4, x,
-            sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(compressor_tilde_perform, 6, x, sp[0]->s_vec,
+            sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
 
     x->sample_rate = sp[0]->s_sr;
 
@@ -96,7 +100,9 @@ void *compressor_tilde_new(void)
     compressor_tilde_set_release  (x,  0.035f); // release   [s]
     compressor_tilde_set_post_gain(x,  0.f);    // gain      [dB]
 
-    x->envelope    = 0.f;
+    x->envelope  = 0.f;
+    x->comp_gain = 1.f;
+
     x->sample_rate = 0.f;
 
     x->in2 = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("threshold"));
@@ -105,7 +111,9 @@ void *compressor_tilde_new(void)
     x->in5 = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("release"));
     x->in6 = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("gain"));
 
-    x->out = outlet_new(&x->x_obj, &s_signal);
+    x->out  = outlet_new(&x->x_obj, &s_signal);
+    x->out2 = outlet_new(&x->x_obj, &s_signal);
+    x->out3 = outlet_new(&x->x_obj, &s_signal);
 
     return (void *)x;
 }
@@ -119,6 +127,8 @@ void compressor_tilde_free(t_compressor_tilde *x)
     inlet_free(x->in6);
 
     outlet_free(x->out);
+    outlet_free(x->out2);
+    outlet_free(x->out3);
 }
 
 void compressor_tilde_setup(void)
