@@ -90,19 +90,34 @@ void compressor_tilde_dsp(t_compressor_tilde *x, t_signal **sp)
     compressor_tilde_set_release(x, x->release);
 }
 
-void *compressor_tilde_new(void)
+void *compressor_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_compressor_tilde *x = (t_compressor_tilde *)pd_new(compressor_tilde_class);
 
-    compressor_tilde_set_threshold(x, -2.f);    // threshold [dB]
-    compressor_tilde_set_ratio    (x,  2.f);    // ratio
-    compressor_tilde_set_attack   (x,  0.f);    // attack    [s]
-    compressor_tilde_set_release  (x,  0.035f); // release   [s]
-    compressor_tilde_set_post_gain(x,  0.f);    // gain      [dB]
+    float threshold = -2.f;
+    float ratio     =  2.f;
+    float attack    =  0.f;
+    float release   =  0.035f;
+    float post_gain =  0.f;
 
-    x->envelope  = 0.f;
-    x->comp_gain = 1.f;
+    switch (argc)
+    {
+        case 5 : post_gain = atom_getfloat(argv + 4);
+        case 4 : release   = atom_getfloat(argv + 3);
+        case 3 : attack    = atom_getfloat(argv + 2);
+        case 2 : ratio     = atom_getfloat(argv + 1);
+        case 1 : threshold = atom_getfloat(argv);
+        default: break;
+    }
 
+    compressor_tilde_set_threshold(x, threshold);
+    compressor_tilde_set_ratio    (x, ratio);
+    compressor_tilde_set_attack   (x, attack);
+    compressor_tilde_set_release  (x, release);
+    compressor_tilde_set_post_gain(x, post_gain);
+
+    x->envelope    = 0.f;
+    x->comp_gain   = 1.f;
     x->sample_rate = 0.f;
 
     x->in2 = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("threshold"));
@@ -138,6 +153,7 @@ void compressor_tilde_setup(void)
                                        (t_method) compressor_tilde_free,
                                        sizeof(t_compressor_tilde),
                                        CLASS_DEFAULT,
+                                       A_GIMME,
                                        0);
 
     class_addmethod(compressor_tilde_class,
