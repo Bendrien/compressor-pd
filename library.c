@@ -191,4 +191,6 @@ void compressor_tilde_setup(void)
     CLASS_MAINSIGNALIN(compressor_tilde_class,
                        t_compressor_tilde,
                        in);
+
+    class_sethelpsymbol(compressor_tilde_class, gensym("compressor~"));
 }
