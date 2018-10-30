@@ -2,10 +2,11 @@
 #define COMPRESSOR_LIBRARY_H
 
 #include "m_pd.h"
+#include "compressor.h"
 
 static t_class *compressor_tilde_class;
 
-typedef struct _compressor_tilde {
+typedef struct t_compressor_tilde {
     t_object x_obj;
 
     t_float in;
@@ -19,18 +20,7 @@ typedef struct _compressor_tilde {
     t_outlet *out2;
     t_outlet *out3;
 
-    float threshold;
-    float slope;
-    float attack;
-    float attack_gain;
-    float release;
-    float release_gain;
-    float post_gain;
-
-    float envelope;
-    float comp_gain;
-
-    float sample_rate;
+    t_compressor *compressor;
 } t_compressor_tilde;
 
 t_int *compressor_tilde_perform(t_int *w);
