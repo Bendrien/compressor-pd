@@ -5,9 +5,8 @@ set(CMAKE_C_STANDARD 99)
 
 add_library(compressor SHARED
         m_pd.h
-        library.h
-        library.c
-    )
+        library.c library.h
+        compressor.c compressor.h)
 
 set_target_properties(compressor PROPERTIES PREFIX "")
 if (APPLE)

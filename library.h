@@ -2,17 +2,17 @@
 #define COMPRESSOR_LIBRARY_H
 
 #include "m_pd.h"
+#include "compressor.h"
 
 ////////////////////////////////////////////////////////////
-// Static compressor instance
+/// Static compressor instance
 ////////////////////////////////////////////////////////////
 static t_class *compressor_tilde_class;
-
 
 ////////////////////////////////////////////////////////////
 /// \brief Structure holding a compressors state
 ////////////////////////////////////////////////////////////
-typedef struct _compressor_tilde {
+typedef struct t_compressor_tilde {
     t_object x_obj;
 
     // Inputs
@@ -28,19 +28,8 @@ typedef struct _compressor_tilde {
     t_outlet *out2;
     t_outlet *out3;
 
-    // State variables
-    float threshold;
-    float slope;
-    float attack;
-    float attack_gain;
-    float release;
-    float release_gain;
-    float post_gain;
-
-    float envelope;
-    float comp_gain;
-
-    float sample_rate;
+    // DSP instance
+    t_compressor *compressor;
 } t_compressor_tilde;
 
 ////////////////////////////////////////////////////////////
@@ -130,15 +119,13 @@ void compressor_tilde_dsp(t_compressor_tilde *x, t_signal **sp);
 /// initialization arguments. These are, in order: threshold, 
 /// ratio, attack, release and post gain.
 ///
-/// \param s    Potential unused ?!
 /// \param argc Number of initialization arguments (range [0, 5])
 /// \param argv Values for the initialization arguments.
 ///
 /// \returns A pointer to the new instance
 ///
 ////////////////////////////////////////////////////////////
-void *compressor_tilde_new(t_symbol *s, int argc, t_atom *argv);
-
+void *compressor_tilde_new(int argc, t_atom *argv);
 
 ////////////////////////////////////////////////////////////
 /// \brief Free a compressor instance
