@@ -3,14 +3,14 @@
 
 t_int *compressor_tilde_perform(t_int *w)
 {
-    t_compressor_tilde *self = (t_compressor_tilde *)(w[1]);
+    t_compressor_tilde    *x = (t_compressor_tilde *)(w[1]);
     t_sample          *inBuf =           (t_sample *)(w[2]);
     t_sample         *outBuf =           (t_sample *)(w[3]);
     t_sample     *compOutBuf =           (t_sample *)(w[4]);
     t_sample      *envOutBuf =           (t_sample *)(w[5]);
     int                    n =                  (int)(w[6]);
 
-    compressor_perform(self->compressor, inBuf, outBuf, compOutBuf, envOutBuf, n);
+    compressor_perform(x->compressor, inBuf, outBuf, compOutBuf, envOutBuf, n);
 
     return (w+7);
 }
