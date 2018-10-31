@@ -46,7 +46,12 @@ void compressor_free(t_compressor *self);
 ///
 /// This functions does the main DSP computations.
 ///
-/// \param w Pointer to a compressor instance and input/output arrays
+/// \param self     Pointer to a compressor instance
+/// \param in       Pointer to the input buffer
+/// \param out      Pointer to the output buffer
+/// \param comp_out Pointer to the gain output buffer
+/// \param env_out  Pointer to the envelope follower output buffer
+/// \param samples  Number of samples
 ///
 ////////////////////////////////////////////////////////////
 void compressor_perform(t_compressor *self, float *in, float *out, float *comp_out, float *env_out, int samples);
@@ -54,7 +59,7 @@ void compressor_perform(t_compressor *self, float *in, float *out, float *comp_o
 ////////////////////////////////////////////////////////////
 /// \brief Threshold setter
 ///
-/// This functions sets the threshold of the compressor.
+/// This functions sets the threshold of the compressor in dB.
 ///
 /// \param self      Pointer to a compressor instance
 /// \param threshold New value for the threshold
