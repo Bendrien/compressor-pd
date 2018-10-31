@@ -32,7 +32,7 @@ void compressor_tilde_set_release(t_compressor_tilde *x, t_floatarg release);
 void compressor_tilde_set_post_gain(t_compressor_tilde *x, t_floatarg post_gain);
 
 void compressor_tilde_dsp(t_compressor_tilde *x, t_signal **sp);
-void *compressor_tilde_new(t_symbol *s, int argc, t_atom *argv);
+void *compressor_tilde_new(int argc, t_atom *argv);
 void compressor_tilde_free(t_compressor_tilde *x);
 
 void compressor_tilde_setup(void);

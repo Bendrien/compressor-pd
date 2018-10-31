@@ -63,7 +63,7 @@ void compressor_tilde_dsp(t_compressor_tilde *x, t_signal **sp)
     compressor_set_sample_rate(x->compressor, sp[0]->s_sr);
 }
 
-void *compressor_tilde_new(t_symbol *s, int argc, t_atom *argv)
+void *compressor_tilde_new(int argc, t_atom *argv)
 {
     t_compressor *compressor = compressor_new();
 
